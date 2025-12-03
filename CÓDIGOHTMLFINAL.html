@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculadora de Dimensiones de Turbina Kaplan</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 20px; }
+        h2, h3 { color: #004d99; border-bottom: 2px solid #ccc; padding-bottom: 5px; }
+        .section { margin-bottom: 30px; padding: 15px; border: 1px solid #eee; border-radius: 8px; }
+        .input-group, .result-group { margin-bottom: 10px; }
+        label { display: inline-block; width: 250px; font-weight: bold; }
+        input[type="number"], .result { 
+            padding: 5px; border: 1px solid #ddd; border-radius: 4px; 
+            width: 150px; display: inline-block; text-align: right; 
+            background-color: #f9f9f9; 
+        }
+        .result { background-color: #e6f7ff; font-weight: bold; }
+        button { padding: 10px 15px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; }
+        button:hover { background-color: #0056b3; }
+        .image-gallery { display: flex; justify-content: space-around; flex-wrap: wrap; margin-top: 20px; }
+        .image-gallery img { max-width: 30%; height: auto; border: 1px solid #ccc; margin: 10px; }
+    </style>
+</head>
+<body>
+
+    <h1>Dimensionamiento de una Turbina Kaplan</h1>
+    <h2>Instituto Tecnológico de Aguascalientes</h2>
+    <div class="section">
+        <h2>Datos Iniciales</h2>
+        <div class="input-group"><label for="N1">N1: Capacidad Instalada (CAPINST)</label><input type="number" id="N1" value="10000"></div>
+        <div class="input-group"><label for="N2">N2: Número de Unidades (NoUnidades)</label><input type="number" id="N2" value="2"></div>
+        <div class="input-group"><label for="N3">N3: Eficiencia Generador (ng)</label><input type="number" id="N3" value="0.97"></div>
+        <div class="input-group"><label for="N5">N5: Carga de Diseño (Hd) [m]</label><input type="number" id="N5" value="15"></div>
+        <div class="input-group"><label for="N6">N6: Peso Volumétrico Agua (kgf/m³)</label><input type="number" id="N6" value="1000"></div>
+        <div class="input-group"><label for="N7">N7: Velocidad de Rotación (REV) [rpm]</label><input type="number" id="N7" value="300"></div>
+        <div class="input-group"><label for="N8">N8: Eficiencia Turbina (EficienciaTurbina)</label><input type="number" id="N8" value="0.90"></div>
+    </div>
+
+    <div class="section">
+        <h2>Resultados para las geometrias</h2>
+        <button onclick="ejecutarCalculosPrincipales()">Ejecutar Cálculos Principales</button>
+        <hr>
+
+        <div class="result-group"><label>Pt: Potencia por Turbina (kW)</label><span id="Pt" class="result">0</span></div>
+        <div class="result-group"><label>Nprimas: Regresión N's (RPM/m)</label><span id="Nprimas" class="result">0</span></div>
+        <div class="result-group"><label>Nprima: Velocidad Rotación Síncrona (RPM)</label><span id="Nprima" class="result">0</span></div>
+        <div class="result-group"><label>Ns: Velocidad Específica (Ns)</label><span id="Ns" class="result">0</span></div>
+        <div class="result-group"><label>Fi: Coeficiente Velocidad Media</label><span id="Fi" class="result">0</span></div>
+        <div class="result-group"><label>DM: Diámetro de Salida [m]</label><span id="DM" class="result">0</span></div>
+        <div class="result-group"><label>Qd: Caudal de Diseño [m³/s]</label><span id="Qd" class="result">0</span></div>
+    </div>
+    
+    <div class="section">
+        <h2>Dimensiones de la Carcaza</h2>
+        <button onclick="ejecutarCalculosCarcaza()">Calcular Dimensiones de Carcaza (A1-K2)</button>
+        
+        <div style="display: flex; justify-content: space-around;">
+            <div style="width: 45%;">
+                <h3>Carcaza de Acero (A1 a M1)</h3>
+                <div class="result-group"><label>A1:</label><span id="A1" class="result">0</span></div>
+                <div class="result-group"><label>B1:</label><span id="B1" class="result">0</span></div>
+                <div class="result-group"><label>C1:</label><span id="C1" class="result">0</span></div>
+                <div class="result-group"><label>D1:</label><span id="D1" class="result">0</span></div>
+                <div class="result-group"><label>E1:</label><span id="E1" class="result">0</span></div>
+                <div class="result-group"><label>F1:</label><span id="F1" class="result">0</span></div>
+                <div class="result-group"><label>G1:</label><span id="G1" class="result">0</span></div>
+                <div class="result-group"><label>H1:</label><span id="H1" class="result">0</span></div>
+                <div class="result-group"><label>I1:</label><span id="I1" class="result">0</span></div>
+                <div class="result-group"><label>L1:</label><span id="L1" class="result">0</span></div>
+                <div class="result-group"><label>M1:</label><span id="M1" class="result">0</span></div>
+            </div>
+
+            <div style="width: 45%;">
+                <h3>Carcaza de Concreto (A2 a K2)</h3>
+                <div class="result-group"><label>A2:</label><span id="A2" class="result">0</span></div>
+                <div class="result-group"><label>B2:</label><span id="B2" class="result">0</span></div>
+                <div class="result-group"><label>C2:</label><span id="C2" class="result">0</span></div>
+                <div class="result-group"><label>D2:</label><span id="D2" class="result">0</span></div>
+                <div class="result-group"><label>E2:</label><span id="E2" class="result">0</span></div>
+                <div class="result-group"><label>F2:</label><span id="F2" class="result">0</span></div>
+                <div class="result-group"><label>G2:</label><span id="G2" class="result">0</span></div>
+                <div class="result-group"><label>H2:</label><span id="H2" class="result">0</span></div>
+                <div class="result-group"><label>I2:</label><span id="I2" class="result">0</span></div>
+                <div class="result-group"><label>J2:</label><span id="J2" class="result">0</span></div>
+                <div class="result-group"><label>K2:</label><span id="K2" class="result">0</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2> Dimensiones del Tubo de Aspiración</h2>
+        <button onclick="ejecutarCalculosTubo()">Calcular Dimensiones del Tubo (Ht-V)</button>
+        <div style="display: flex; justify-content: space-around;">
+            <div style="width: 30%;">
+                <div class="result-group"><label>Ht:</label><span id="Ht" class="result">0</span></div>
+                <div class="result-group"><label>N:</label><span id="N" class="result">0</span></div>
+                <div class="result-group"><label>O:</label><span id="O" class="result">0</span></div>
+                <div class="result-group"><label>P:</label><span id="P" class="result">0</span></div>
+                <div class="result-group"><label>Q:</label><span id="Q" class="result">0</span></div>
+            </div>
+            <div style="width: 30%;">
+                <div class="result-group"><label>R:</label><span id="R" class="result">0</span></div>
+                <div class="result-group"><label>S:</label><span id="S" class="result">0</span></div>
+                <div class="result-group"><label>T:</label><span id="T" class="result">0</span></div>
+                <div class="result-group"><label>Z:</label><span id="Z" class="result">0</span></div>
+            </div>
+            <div style="width: 30%;">
+                <div class="result-group"><label>U:</label><span id="U" class="result">0</span></div>
+                <div class="result-group"><label>V:</label><span id="V" class="result">0</span></div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="section">
+        <h2> Geometrías</h2>
+        <p>En las siguientes imágenes se aprecian los valores de las geometrias:</p>
+        
+        <div class="image-gallery">
+            <div>
+                <h3>Carcaza de Acero (A1-M1)</h3>
+                <img src="Dimensiones.png" alt="Carcaza A1-M1">
+
+[Image of Dimensions for Steel Casing]
+
+            </div>
+            <div>
+                <h3>Carcaza de Concreto (A2-K2)</h3>
+                <img src="Dimensiones.png" alt="Carcaza A1-M1">
+
+[Image of Dimensions for Concrete Casing]
+
+            </div>
+            <div>
+                <h3>Tubo de Aspiración (Ht-V)</h3>
+               <img src="Dimensiones.png" alt="Carcaza A1-M1"> 
+
+[Image of Dimensions for Draft Tube]
+
+            </div>
+        </div>
+        <p>Asegúrate de colocar las imágenes de los diagramas en la misma carpeta que este archivo HTML, o actualiza las rutas.</p>
+    </div>
+
+    <script src="calculos.js"></script> 
+    
+    <script>
+        
+        function ejecutarCalculosPrincipales() {
+           
+            PotenciaDeLaTurbina(); 
+            EcuaciónDeRegresión();
+            VelocidadDeRotaciónSíncrona();
+            VelocidadEspecífica(); 
+            CoeficienteDeVelocidadMedia(); 
+            DiametroDeSalida();
+            Caudaldediseño();
+            DiametroMedioDelRodete(); 
+            AlturaMediaDelÁlabe(); 
+        }
+        
+        function ejecutarCalculosCarcaza() {
+            
+            if (Number(document.getElementById("DM").innerText) === 0) {
+                ejecutarCalculosPrincipales();
+            }
+            
+            // Carcaza de Acero
+            CarcazaDimensionA1(); CarcazaDimensionB1(); CarcazaDimensionC1(); CarcazaDimensionD1(); CarcazaDimensionE1(); 
+            CarcazaDimensionF1(); CarcazaDimensionG1(); CarcazaDimensionH1(); CarcazaDimensionI1(); CarcazaDimensionL1(); 
+            CarcazaDimensionM1(); 
+
+            // Carcaza de Concreto
+            CarcazaDimensionA2(); CarcazaDimensionB2(); CarcazaDimensionC2(); CarcazaDimensionD2(); CarcazaDimensionE2();
+            CarcazaDimensionF2(); CarcazaDimensionG2(); CarcazaDimensionH2(); CarcazaDimensionI2(); CarcazaDimensionJ2();
+            CarcazaDimensionK2();
+        }
+
+        function ejecutarCalculosTubo() {
+            
+             if (Number(document.getElementById("DM").innerText) === 0) {
+                ejecutarCalculosPrincipales();
+            }
+            
+            // Tubo de Aspiración
+            TuboAspiracionDimensionHt(); TuboAspiracionDimensionN(); TuboAspiracionDimensionO(); TuboAspiracionDimensionP(); 
+            TuboAspiracionDimensionQ(); TuboAspiracionDimensionR(); TuboAspiracionDimensionS(); TuboAspiracionDimensionT(); 
+            TuboAspiracionDimensionZ(); TuboAspiracionDimensionU(); TuboAspiracionDimensionV();
+        }
+    </script>
+</body>
+</html>
